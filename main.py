@@ -42,6 +42,23 @@ class Boxes(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
 
 
+class Camera:
+    # зададим начальный сдвиг камеры
+    def __init__(self):
+        self.dx = 0
+        self.dy = 0
+
+    # сдвинуть объект obj на смещение камеры
+    def apply(self, obj):
+        obj.rect.x += self.dx
+        obj.rect.y += self.dy
+
+    # позиционировать камеру на объекте target
+    def update(self, target):
+        self.dx = -(target.rect.x + target.rect.w // 2 - width // 2)
+        self.dy = -(target.rect.y + target.rect.h // 2 - height // 2)
+
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
@@ -155,6 +172,7 @@ FPS = 60
 start_screen()
 size = width, height = (level_x + 1) * 50, (level_y + 1) * 50
 screen = pygame.display.set_mode(size)
+camera = Camera()
 
 running = True
 while running:
@@ -171,6 +189,9 @@ while running:
             elif event.key == pygame.K_DOWN:
                 player.move_down()
     screen.fill((0, 0, 0))
+    camera.update(player)
+    for sprite in all_sprites:
+        camera.apply(sprite)
     boxes_group.draw(screen)
     grass_group.draw(screen)
     player_group.draw(screen)
