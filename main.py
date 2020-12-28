@@ -101,11 +101,17 @@ def terminate():
 
 
 def load_level(filename):
-    filename = "data/" + filename
+    if not filename:
+        print('Введите название карты')
+        terminate()
+    filename = "data/" + filename + ".txt"
     # читаем уровень, убирая символы перевода строки
-    with open(filename, 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
-
+    try:
+        with open(filename, 'r') as mapFile:
+            level_map = [line.strip() for line in mapFile]
+    except FileNotFoundError:
+        print(f'Карты {filename[5:]} не существует')
+        terminate()
     # и подсчитываем максимальную длину
     max_width = max(map(len, level_map))
 
@@ -114,10 +120,7 @@ def load_level(filename):
 
 
 def start_screen():
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
+    intro_text = ["МАРИО", "", "Чтобы начать нажмите любую клавишу"]
 
     fon = pygame.transform.scale(load_image('fon.jpg'), (1280, 720))
     screen.blit(fon, (0, 0))
@@ -143,16 +146,15 @@ def start_screen():
 
 
 pygame.init()
+player, level_x, level_y = generate_level(load_level(input()))
 size = width, height = 1280, 720
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption('Перемещение героя')
+pygame.display.set_caption('Перемещение героя. Дополнительные уровни')
 clock = pygame.time.Clock()
 FPS = 60
-
 start_screen()
-size = width, height = 500, 500
+size = width, height = (level_x + 1) * 50, (level_y + 1) * 50
 screen = pygame.display.set_mode(size)
-player, level_x, level_y = generate_level(load_level('map.txt'))
 
 running = True
 while running:
