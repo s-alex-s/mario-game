@@ -68,22 +68,22 @@ class Player(pygame.sprite.Sprite):
 
     def move_left(self):
         self.rect = self.rect.move(-50, 0)
-        if pygame.sprite.spritecollideany(self, boxes_group):
+        if pygame.sprite.spritecollideany(self, boxes_group) or not pygame.sprite.spritecollideany(self, grass_group):
             self.rect = self.rect.move(50, 0)
 
     def move_right(self):
         self.rect = self.rect.move(50, 0)
-        if pygame.sprite.spritecollideany(self, boxes_group):
+        if pygame.sprite.spritecollideany(self, boxes_group) or not pygame.sprite.spritecollideany(self, grass_group):
             self.rect = self.rect.move(-50, 0)
 
     def move_up(self):
         self.rect = self.rect.move(0, -50)
-        if pygame.sprite.spritecollideany(self, boxes_group):
+        if pygame.sprite.spritecollideany(self, boxes_group) or not pygame.sprite.spritecollideany(self, grass_group):
             self.rect = self.rect.move(0, 50)
 
     def move_down(self):
         self.rect = self.rect.move(0, 50)
-        if pygame.sprite.spritecollideany(self, boxes_group):
+        if pygame.sprite.spritecollideany(self, boxes_group) or not pygame.sprite.spritecollideany(self, grass_group):
             self.rect = self.rect.move(0, -50)
 
 
@@ -170,8 +170,6 @@ pygame.display.set_caption('Перемещение героя. Дополнит�
 clock = pygame.time.Clock()
 FPS = 60
 start_screen()
-size = width, height = (level_x + 1) * 50, (level_y + 1) * 50
-screen = pygame.display.set_mode(size)
 camera = Camera()
 
 running = True
